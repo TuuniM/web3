@@ -7,8 +7,20 @@
   </head>
   <body>
     <p>
-      Hello! Open the developer tools, please.<br />
-      Start by editing the files in <code>src/</code> folder.
+      Arvaa numero 1-99 väliltä
     </p>
+    <span class="time" id="display">00:00:00</span>
+
+    <div class="form">
+      <label for="guessField">Arvauksesi: </label><input type="text" id="guessField" class="guessField">
+      <input type="submit" value="Submit guess" class="guessSubmit">
+    </div>
+
+    <div class="resultParas">
+      <p class="guesses"></p>
+      <p class="lastResult"></p>
+      <p class="lowOrHi"></p>
+    </div>
+
   </body>
 </html>
