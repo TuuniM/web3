@@ -1,9 +1,5 @@
-import Lunchmenu from './assets/sodexo-menu.json';
+import SodexoData from './modules/sodexo-data';
 
-console.log('Lunch menu json', Lunchmenu);
-
-let coursesEn = [];
-let coursesFi = [];
 let languageSetting = 'fi';
 
 /**
@@ -76,15 +72,6 @@ const pickRandomDish = (menu) => {
 
 const displayRandomDish = () => {
   alert(pickRandomDish(coursesFi));
-};
-
-
-const parseSodexoMenu = (sodexoDailyMenu) => {
-  const courses = Object.Values(sodexoDailyMenu);
-  for (const course of courses) {
-    coursesEn.push(course.title_en);
-    coursesFi.push(course.title_fi);
-  }
 };
 
 const init = () => {
