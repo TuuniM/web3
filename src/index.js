@@ -1,97 +1,103 @@
-import Lunchmenu from './assets/sodexo-menu.json';
-
-console.log('Lunch menu json', Lunchmenu);
-
-let coursesEn = [];
-let coursesFi = [];
-let languageSetting = 'fi';
-
 /**
- * Displays lunch menu items as html list
- *
- * @param {Array} menu - Lunch menu array
+ * Week 2 tasks
  */
-const renderMenu = (menu) => {
-  const list = document.querySelector('#sodexo');
-  list.innerHTML = '';
-  for (const item of menu) {
-    const listItem = document.createElement('li');
-    listItem.textContent = item;
-    list.appendChild(listItem);
-  }
-};
+
+ const menu = [
+  {name: 'Lingonberry jam', price: 4.00},
+  {name: 'Mushroom and bean casserole', price: 5.50},
+  {name: 'Chili-flavoured wheat', price: 3.00},
+  {name: 'Vegetarian soup', price: 4.80},
+  {name: 'Pureed root vegetable soup with smoked cheese', price: 8.00}
+ ];
+
+ /**
+  * 1. Function validate meal name based regex rules
+  * @param {string} mealName
+  * @returns boolean - name is valid
+  */
+ const validateMealName = (mealName) => {
+   const namePattern = /^[A-ZÅÄÖ]{1}[a-zåäöA-ZÅÄÖ0-9\- \/,()]{3,63}$/;
+  return namePattern.test(mealName);
+ };
 
 
+ //Test vaidation
+ console.log('mealname is valid:', validateMealName('Lingonberry jam'));
+
+ for (const item of Object.values(menu)) {
+ console.log('mealname ' + item.name + ' is valid:', validateMealName(item.name));
+ }
 
 /**
- * Switch app lang en/fi
- */
-const switchLanguage = () => {
-  if (languageSetting === 'fi') {
-    languageSetting = 'en';
-    renderMenu(coursesEn);
-  } else {
-    languageSetting = 'fi';
-    renderMenu(coursesFi);
-  }
-  console.log('change language to ', languageSetting);
-};
-
-/**
- * Sorts menu alphapetically
+ * 2. Sort
  *
  * @param {Array} menu
- * @param {string} order
- * @returns Sorted menu array
  */
-const sortMenu = (menu, order) => {
-  if(order == 'desc') {
-    return menu.sort().reverse();
-  } else {
-    return menu.sort();
-  }
+ const sortMenu = (menu) => {
+ const sortedMenu = menu.sort((a, b) => a.price - b.price);
+  return sortMenu;
+ };
+ console.log('sorted menu', sortMenu(menu));
+
+ /**
+  * 3.Filter by price
+  */
+ const filterMealsByPriceLimit = (menu, priceLimit) => {
+  return menu.filter((item) => item.price < priceLimit);
+ };
+ console.log('filtered menu', filterMealsByPriceLimit(menu, 5));
+
+ /**
+  * 4. Raise all meal prices by percentage
+  *
+  * @param {Array} menu
+  * @param {number} percent
+  * @returns array
+  */
+ const raisePricesByPercent = (menu, percent) => {
+  return menu.map(item => {
+    return {
+      name: item.name,
+      price: item.price * (1 + percent / 100)
+    };
+ });
 };
+console.log('price raised:', raisePricesByPercent(menu, 15));
 
 /**
- * Eventhandler for sort menu button
+ * 5. Calculate total price for a menu array
+ * @param {*} menu
  */
-const renderSortedMenu = () => {
-  if (languageSetting === 'en') {
-    renderMenu( sortMenu(coursesEn, 'asc') );
-  } else {
-    renderMenu(sortMenu(coursesFi, 'desc'));
-  }
+const calculateTotalPrice = (menu) => {
+  return menu.reduce((a, b) => {
+    return {price: a.price + b.price};
+  });
 };
+console.log('total cost', calculateTotalPrice(menu));
+
+
+// B, Fazer menu data
+
+import FazerMenu from './assets/fazer-week-example.json';
+console.log('FazerMenu', FazerMenu);
 
 /**
- * Picks a random dish from lunch menu array
+ * Choose vegetarian meal for a menu data array
  *
- * @param {Array} menu
- * @returns string dish name
+ * @param {*} menuData
  */
-const pickRandomDish = (menu) => {
-  const randomIndex = Math.floor(Math.random() * menu.lenght);
-  return menu[randomIndex];
-};
-
-const displayRandomDish = () => {
-  alert(pickRandomDish(coursesFi));
-};
-
-
-const parseSodexoMenu = (sodexoDailyMenu) => {
-  const courses = Object.Values(sodexoDailyMenu);
-  for (const course of courses) {
-    coursesEn.push(course.title_en);
-    coursesFi.push(course.title_fi);
+const selectVegeMeals = (menuData) => {
+let vegeMeals = [];
+console.log(menuData.LunchMenus[0].SetMenus);
+for (const setMenu of menuData.LunchMenus[0].setMenus) {
+  console.log(setMenu);
+  for (const meal of setMenu.Meals) {
+    if (meal.Diets.includes('Veg')) {
+      vegeMeals.push(meal.Name);
+    }
   }
+}
+return vegeMeals;
 };
+console.log('test vege meal function', selectVegeMeals(FazerMenu));
 
-const init = () => {
-  parseSodexoMenu(Lunchmenu.courses);
-  document.querySelector('#switch-lang').addEventListener('click', switchLanguage);
-  document.querySelector('#sort-menu').addEventListener('click', renderSortedMenu);
-  document.querySelector('#pick-dish').addEventListener('click', pickRandomDish);
-  renderMenu(coursesFi);
-};
-init();
