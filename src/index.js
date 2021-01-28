@@ -1,84 +1,60 @@
-import SodexoData from './modules/sodexo-data';
+const createCheatCode = (secretWord) => {
+  const keypress = new Array(secretWord.lenght);
+  document.addEventListener('keypress', event => {
+    keyPresses.shift();
+    keyPresses.push(event.key);
+    if (keyPresses.join('').toLowerCase() === secretWord) {
+      alert("correct word: " + secretWord);
+    }
+  });
 
-let languageSetting = 'fi';
-
-/**
- * Displays lunch menu items as html list
- *
- * @param {Array} menu - Lunch menu array
- */
-const renderMenu = (menu) => {
-  const list = document.querySelector('#sodexo');
-  list.innerHTML = '';
-  for (const item of menu) {
-    const listItem = document.createElement('li');
-    listItem.textContent = item;
-    list.appendChild(listItem);
-  }
 };
+createCheatCode('hello');
+createCheatCode('moi');
 
-
-
-/**
- * Switch app lang en/fi
- */
-const switchLanguage = () => {
-  if (languageSetting === 'fi') {
-    languageSetting = 'en';
-    renderMenu(coursesEn);
-  } else {
-    languageSetting = 'fi';
-    renderMenu(coursesFi);
-  }
-  console.log('change language to ', languageSetting);
+const displayMouseDoubleClickCoordinates = () => {
+  const output = document.querySelector('.output');
+  document.addEventListener('dblClick', event => {
+    console.log('dbl click coords: ', event.clientX, event.clientY);
+    output.textContent = `Double clicked at: ${event.clientX}, ${event.clientY}`;
+  });
 };
+displayMouseDoubleClickCoordinates();
 
-/**
- * Sorts menu alphapetically
- *
- * @param {Array} menu
- * @param {string} order
- * @returns Sorted menu array
- */
-const sortMenu = (menu, order) => {
-  if(order == 'desc') {
-    return menu.sort().reverse();
-  } else {
-    return menu.sort();
-  }
+const testReactToTouch = () => {
+  const target = document.querySelector('.touch');
+  target.addEventListener('touchstart', event => {
+    console.log('target touched', event);
+    output.textContent = `Double touches at: ${event.targetTouches[0].clientX},
+    ${event.targetTouches[0].clientY}`;
+  });
 };
+testReactToTouch();
 
-/**
- * Eventhandler for sort menu button
- */
-const renderSortedMenu = () => {
-  if (languageSetting === 'en') {
-    renderMenu( sortMenu(coursesEn, 'asc') );
-  } else {
-    renderMenu(sortMenu(coursesFi, 'desc'));
-  }
+const createStupidTimer = (timeInSecs) => {
+  setTimeout(() => {
+    console.log('do something!');
+  }, timeInSecs * 1000);
 };
+//createStupidTimer(5);
 
-/**
- * Picks a random dish from lunch menu array
- *
- * @param {Array} menu
- * @returns string dish name
- */
-const pickRandomDish = (menu) => {
-  const randomIndex = Math.floor(Math.random() * menu.lenght);
-  return menu[randomIndex];
-};
 
-const displayRandomDish = () => {
-  alert(pickRandomDish(coursesFi));
+const createInactivityTimer = (duration) => {
+  const output = document.querySelector('.output');
+  let timer;
+  const resetTimer = event => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      output.textContent = 'Do something!';
+      console.log('Do something!');
+    }, duration * 1000);
+  };
+  resetTimer();
+  document.addEventListener('mousemove', resetTimer);
+  document.addEventListener('touchstart', resetTimer);
 };
+createInactivityTimer(5);
 
-const init = () => {
-  parseSodexoMenu(Lunchmenu.courses);
-  document.querySelector('#switch-lang').addEventListener('click', switchLanguage);
-  document.querySelector('#sort-menu').addEventListener('click', renderSortedMenu);
-  document.querySelector('#pick-dish').addEventListener('click', pickRandomDish);
-  renderMenu(coursesFi);
-};
-init();
+
+
+

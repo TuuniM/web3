@@ -4,7 +4,11 @@ console.log('Lunch menu json', Lunchmenu);
 let coursesEn = [];
 let coursesFi = [];
 
-
+/**
+ * Parses couse arrays from Sodexo json file
+ *
+ * @param {Object} sodexoDailyMenu
+ */
 const parseSodexoMenu = (sodexoDailyMenu) => {
   const courses = Object.Values(sodexoDailyMenu);
   for (const course of courses) {
@@ -13,6 +17,9 @@ const parseSodexoMenu = (sodexoDailyMenu) => {
   }
 };
 
-const SodexoData = {};
+parseSodexoMen(Lunchmenu.courses);
+
+const SodexoData = {coursesEn, coursesFi};
 
 export default SodexoData;
+
